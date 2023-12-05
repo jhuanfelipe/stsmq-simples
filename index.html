@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dudu Casa Show</title>
+</head>
+<body>
+  <h1>Dudu Casa Show</h1>
+  <table>
+    <tr>
+      <td>Status MQ1:</td>
+      <td id="status">offline</td>
+    </tr>
+    <tr>
+      <td>Transações:</td>
+      <td id="transacoes">0000</td>
+    </tr>
+  </table>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:3000');
+
+    socket.onmessage = function(event) {
+      const data = event.data.split(':');
+      const type = data[0].trim();
+      const value = data[1].trim();
+
+      if (type === 'status') {
+        document.getElementById('status').textContent = value;
+      } else if (type === 'transacoes') {
+        document.getElementById('transacoes').textContent = value;
+      }
+    };
+
+    socket.onclose = function(event) {
+      // Lógica para lidar com a desconexão do WebSocket
+      console.log('Conexão WebSocket fechada.');
+    };
+  </script>
+</body>
+</html>
